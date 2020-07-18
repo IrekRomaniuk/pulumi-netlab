@@ -1,0 +1,54 @@
+config:
+  azure:environment: public
+  azure:location: EastUS
+  azure:subscriptionId: xxx
+  vnet-lab:data:
+    rg_prefix: 'g-'
+    skip_gateways: False
+    gw_sku: VpnGw1
+  vnet-lab:vm:  
+    imageOffer: ubuntu-18-04-lts-free
+    imagePublisher: cognosys
+    imageSku: "hardened-ubuntu-18-04-lts-freesku"
+    plan: "hardened-ubuntu-18-04-lts-freesku"
+    publisher: "cognosys"
+    product: "ubuntu-18-04-lts-free"
+    size: Standard_A0
+    admin_username: "azureuser"
+    admin_password: "xxx"
+  vnet-lab:vnets:
+    - V-WestUS-Core:
+        addr: [10.111.128.0/17]
+        bgp_settings:
+          asn: 64513
+          peeringAddress: 10.111.128.254
+        subnets:
+          - name: GatewaySubnet
+            address_prefix: 10.111.128.0/24
+          - name: TestSubnet
+            address_prefix: 10.111.139.0/24  
+    - V-EastUS-Core:
+        addr: [10.111.0.0/17]
+        bgp_settings:
+          asn: 64512
+          peeringAddress: 10.111.0.254
+        subnets:
+          - name: GatewaySubnet 
+            address_prefix: 10.111.0.0/24
+          - name: Shared_DC
+            address_prefix: 10.111.8.0/24
+          - name: AzureBastionSubnet
+            address_prefix: 10.111.18.0/24 
+          - name: TestSubnet
+            address_prefix: 10.111.19.0/24                            
+  vnet-lab:peerings:
+    - PR-WestUS-EastUS-Core:
+        local: V-WestUS-Core
+        remote: V-EastUS-Core
+    - PR-EastUS-WestUS-Core:
+        local: V-EastUS-Core
+        remote: V-WestUS-Core
+   
+          
+          
+
